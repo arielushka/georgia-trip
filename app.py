@@ -3,7 +3,7 @@ from flask import Flask, render_template_string
 
 app = Flask(__name__)
 
-# --- תבנית ה-HTML וה-CSS ---
+# --- הגדרות עיצוב ותוכן ---
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -17,131 +17,107 @@ HTML_TEMPLATE = """
     
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --text-white: #ffffff;
-            --text-gray: #cbd5e1;
-            --accent: #38bdf8;
+            --bg-main: #0b1120;       /* רקע כהה מאוד */
+            --card-bg: #1e293b;       /* רקע כרטיסים */
+            --text-bright: #ffffff;   /* טקסט לבן בוהק */
+            --text-dim: #94a3b8;      /* טקסט אפור משני */
+            --accent: #38bdf8;        /* תכלת סייבר */
+            --danger: #ef4444;        /* אדום להתקפה */
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-white);
+            background-color: var(--bg-main);
+            color: var(--text-bright);
             font-family: 'Rubik', sans-serif;
             overflow-x: hidden;
         }
 
-        /* --- Navbar --- */
+        /* ניווט */
         .navbar {
-            background-color: #1e293b !important;
+            background-color: #151e32 !important;
             border-bottom: 1px solid #334155;
+            padding: 15px 0;
         }
-        .nav-link {
-            color: var(--text-gray) !important;
-            font-weight: 600;
-            margin-left: 15px;
-            font-size: 1.1rem;
-        }
-        .nav-link.active {
-            color: var(--accent) !important;
-            border-bottom: 2px solid var(--accent);
-        }
+        .navbar-brand { font-weight: 800; color: var(--accent) !important; letter-spacing: 1px; }
+        .nav-link { color: var(--text-dim) !important; font-weight: 500; margin-left: 20px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { color: var(--text-bright) !important; }
 
-        /* --- Hero Section --- */
+        /* כותרות */
         .hero-section {
-            padding: 60px 0;
+            padding: 70px 0;
             text-align: center;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%);
-            border-bottom: 1px solid #334155;
+            background: radial-gradient(circle at top, #1e293b 0%, var(--bg-main) 70%);
+            border-bottom: 1px solid #1e293b;
             margin-bottom: 40px;
         }
+        .display-4 { font-weight: 800; letter-spacing: -1px; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
+        .lead { color: var(--text-dim); max-width: 700px; margin: 0 auto; }
 
-        .hero-title {
-            font-weight: 800;
-            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* --- Cards --- */
-        .custom-card {
+        /* כרטיסים */
+        .cyber-card {
             background-color: var(--card-bg);
             border: 1px solid #334155;
-            border-radius: 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
-            transition: 0.3s;
-            color: var(--text-white);
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
         }
-        
-        .custom-card:hover {
+        .cyber-card:hover {
+            transform: translateY(-2px);
             border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .course-header {
+        /* עיצוב פנימי */
+        .card-header-custom {
             padding: 20px;
             display: flex;
             align-items: center;
             cursor: pointer;
+            background: rgba(255,255,255,0.02);
         }
-
-        .icon-box {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            background: rgba(255,255,255,0.05);
-            margin-left: 20px;
-        }
-
-        .course-details {
-            background: rgba(0,0,0,0.3);
-            border-top: 1px solid #334155;
-            padding: 30px;
-        }
-
-        .practice-container {
-            padding: 30px;
-        }
-        
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            margin-top: 20px;
+        .icon-wrap {
+            width: 45px; height: 45px;
             border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid #475569;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            background: rgba(255,255,255,0.05);
         }
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .course-details {
+            padding: 25px;
+            border-top: 1px solid #334155;
+            background: #182235;
+        }
+
+        /* כפתורים */
+        .btn-glow {
+            display: block;
             width: 100%;
-            height: 100%;
-        }
-
-        h1, h2, h3, h4, h5, h6 { color: var(--text-white) !important; }
-        p, li { color: var(--text-gray); }
-        .text-white-force { color: white !important; }
-
-        .btn-action {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 25px;
+            padding: 12px;
+            text-align: center;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 700;
             transition: 0.3s;
+            margin-top: 20px;
         }
         .btn-cisco { border: 2px solid var(--accent); color: var(--accent); }
-        .btn-cisco:hover { background: var(--accent); color: white; }
+        .btn-cisco:hover { background: var(--accent); color: white; box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
         
-        .btn-practice { background: #ef4444; color: white; border: none; }
-        .btn-practice:hover { background: #dc2626; color: white; box-shadow: 0 0 15px rgba(239,68,68,0.4); }
+        .btn-hack { background: var(--danger); color: white; border: none; }
+        .btn-hack:hover { background: #dc2626; color: white; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+
+        /* כללי */
+        ul { color: var(--text-dim); }
+        li { margin-bottom: 8px; }
+        strong { color: var(--text-bright); }
+        .video-box {
+            position: relative; padding-bottom: 56.25%; height: 0;
+            border-radius: 8px; overflow: hidden; margin-top: 15px;
+            border: 1px solid #334155;
+        }
+        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
     </style>
 </head>
@@ -149,22 +125,14 @@ HTML_TEMPLATE = """
 
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/"><i class="fas fa-user-secret me-2"></i>CyberRoadmap</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" href="/"><i class="fas fa-terminal me-2"></i>CYBER<span class="text-white">ROADMAP</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if mode == 'courses' %}active{% endif %}" href="/">
-                            <i class="fas fa-book-open ms-1"></i> מסלול הלימוד
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if mode == 'practice' %}active{% endif %}" href="/practice">
-                            <i class="fas fa-dumbbell ms-1"></i> אזור תרגול
-                        </a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link {% if mode=='courses' %}active{% endif %}" href="/">קורסים</a></li>
+                    <li class="nav-item"><a class="nav-link {% if mode=='practice' %}active{% endif %}" href="/practice">תרגול מעשי</a></li>
                 </ul>
             </div>
         </div>
@@ -173,50 +141,35 @@ HTML_TEMPLATE = """
     {% if mode == 'courses' %}
     <div class="hero-section">
         <div class="container">
-            <h1 class="display-4 hero-title">מסלול הלימוד המלא</h1>
-            <div class="row justify-content-center mt-3">
-                <div class="col-lg-8">
-                    <p class="lead text-white-force">
-                        ברוכים הבאים! הקורסים המוצגים למטה לקוחים מתוך האקדמיה של <strong>Cisco (NetAcad)</strong>.
-                        <br>
-                        המסלול בנוי בצורה מדורגת – חשוב מאוד להתקדם שלב אחר שלב.
-                    </p>
-                </div>
-            </div>
+            <h1 class="display-4 mb-3">מסלול הלימוד</h1>
+            <p class="lead">הקורסים הרשמיים של Cisco (NetAcad) בסדר הנכון.<br>אל תדלג על שלבים - הבסיס הוא הכל.</p>
         </div>
     </div>
 
     <div class="container pb-5">
         <div class="row justify-content-center">
-            <div class="col-lg-9">
-                {% for course in courses %}
-                <div class="custom-card course-card" data-bs-toggle="collapse" data-bs-target="#c{{ course.id }}">
-                    <div class="course-header">
-                        <span class="h2 ms-3 mb-0 opacity-50">{{ course.id }}</span>
-                        <div class="icon-box" style="color: {{ course.color }}; border: 1px solid {{ course.color }}">
-                            <i class="fas {{ course.icon }}"></i>
-                        </div>
+            <div class="col-lg-8">
+                {% for c in courses %}
+                <div class="cyber-card" data-bs-toggle="collapse" data-bs-target="#c{{ c.id }}">
+                    <div class="card-header-custom">
+                        <span class="h3 mb-0 text-muted ms-3 opacity-25">0{{ c.id }}</span>
+                        <div class="icon-wrap" style="color:{{c.color}}; border:1px solid {{c.color}}"><i class="fas {{c.icon}}"></i></div>
                         <div class="flex-grow-1">
-                            <h4 class="mb-1 fw-bold">{{ course.title }}</h4>
-                            <span class="badge bg-secondary">{{ course.duration }}</span>
+                            <h5 class="mb-1 fw-bold">{{ c.title }}</h5>
+                            <span class="badge bg-dark border border-secondary">{{ c.duration }}</span>
                         </div>
-                        <i class="fas fa-chevron-down opacity-50"></i>
+                        <i class="fas fa-chevron-down text-muted"></i>
                     </div>
-
-                    <div class="collapse" id="c{{ course.id }}">
+                    <div class="collapse" id="c{{ c.id }}">
                         <div class="course-details">
-                            <h5 class="text-accent mb-3"><i class="fas fa-info-circle ms-2"></i>על הקורס</h5>
-                            <p>{{ course.desc }}</p>
-                            
-                            <h5 class="text-accent mb-3 mt-4"><i class="fas fa-list ms-2"></i>מה לומדים?</h5>
-                            <ul>
-                                {% for item in course.syllabus %}
-                                <li>{{ item }}</li>
-                                {% endfor %}
+                            <h6 class="text-info mb-2">על הקורס</h6>
+                            <p class="text-muted small mb-4">{{ c.desc }}</p>
+                            <h6 class="text-info mb-2">מה לומדים?</h6>
+                            <ul class="small ps-3">
+                                {% for s in c.syllabus %}<li>{{ s }}</li>{% endfor %}
                             </ul>
-                            
-                            <a href="{{ cisco_url }}" target="_blank" class="btn-action btn-cisco w-100 text-center mt-4">
-                                עבור לקורס באתר סיסקו <i class="fas fa-external-link-alt ms-2"></i>
+                            <a href="https://www.netacad.com/catalogs/learn" target="_blank" class="btn-glow btn-cisco">
+                                לקטלוג הקורסים <i class="fas fa-external-link-alt ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -229,54 +182,33 @@ HTML_TEMPLATE = """
     {% elif mode == 'practice' %}
     <div class="hero-section">
         <div class="container">
-            <h1 class="display-4 hero-title">אזור התרגול המעשי</h1>
-            <p class="lead text-white-force">
-                סיימת את התיאוריה? זה הזמן ללכלך את הידיים.
-                <br>
-                מומלץ להתחיל כאן רק אחרי שסיימת את שלב הרשתות (Networking Essentials).
-            </p>
+            <h1 class="display-4 mb-3">אזור התרגול</h1>
+            <p class="lead">סיימת את התיאוריה? זה הזמן להפשיל שרוולים.<br>מומלץ להתחיל כאן רק לאחר סיום 'Networking Essentials'.</p>
         </div>
     </div>
 
     <div class="container pb-5">
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="custom-card h-100 practice-container">
-                    <div class="text-center mb-4">
-                        <i class="fas fa-flag-checkered fa-4x text-white-force mb-3"></i>
-                        <h2 class="fw-bold">picoCTF</h2>
-                        <p class="text-gray">המקום הכי טוב להתחיל בו משחקי Capture The Flag.</p>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-5">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="fas fa-flag-checkered fa-3x text-white mb-3"></i>
+                    <h3 class="fw-bold">picoCTF</h3>
+                    <p class="text-muted small">פתרון חידות סייבר בסגנון "Capture The Flag". מצוין למתחילים.</p>
+                    <div class="video-box">
+                        <iframe src="https://www.youtube.com/embed/videoseries?list=PL1H1sFpDiRzZ6Hk4R9Y5e3_wWz3_wWz3" allowfullscreen></iframe>
                     </div>
-                    <div class="alert alert-dark border-secondary">
-                        <small class="text-white-force"><strong>מה עושים שם?</strong> פותרים חידות סייבר (Forensics, Web, Crypto).</small>
-                    </div>
-                    <h5 class="mt-4 mb-2 text-white-force">מדריך וידאו (John Hammond):</h5>
-                    <div class="video-wrapper">
-                        <iframe src="https://www.youtube.com/embed/videoseries?list=PL1H1sFpDiRzZ6Hk4R9Y5e3_wWz3_wWz3" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    <a href="https://picoctf.org/" target="_blank" class="btn-action btn-practice w-100 text-center mt-4">
-                        התחל לשחק ב-picoCTF <i class="fas fa-arrow-left ms-2"></i>
-                    </a>
+                    <a href="https://picoctf.org/" target="_blank" class="btn-glow btn-hack">התחל לשחק</a>
                 </div>
             </div>
-
-            <div class="col-lg-6">
-                <div class="custom-card h-100 practice-container">
-                    <div class="text-center mb-4">
-                        <i class="fas fa-cube fa-4x text-white-force mb-3"></i>
-                        <h2 class="fw-bold">TryHackMe</h2>
-                        <p class="text-gray">לימוד מודרך עם מכונות וירטואליות אמיתיות.</p>
+            <div class="col-lg-5">
+                <div class="cyber-card h-100 p-4 text-center">
+                    <i class="fas fa-cube fa-3x text-white mb-3"></i>
+                    <h3 class="fw-bold">TryHackMe</h3>
+                    <p class="text-muted small">מעבדות וירטואליות מודרכות. תוקפים מכונות אמיתיות דרך הדפדפן.</p>
+                    <div class="video-box">
+                        <iframe src="https://www.youtube.com/embed/fNZdXq2jXWU" allowfullscreen></iframe>
                     </div>
-                    <div class="alert alert-dark border-secondary">
-                        <small class="text-white-force"><strong>מה עושים שם?</strong> פורצים למכונות לפי מדריך.</small>
-                    </div>
-                    <h5 class="mt-4 mb-2 text-white-force">איך מתחילים? (NetworkChuck):</h5>
-                    <div class="video-wrapper">
-                        <iframe src="https://www.youtube.com/embed/fNZdXq2jXWU" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    <a href="https://tryhackme.com/" target="_blank" class="btn-action btn-practice w-100 text-center mt-4">
-                        הירשם ל-TryHackMe <i class="fas fa-arrow-left ms-2"></i>
-                    </a>
+                    <a href="https://tryhackme.com/" target="_blank" class="btn-glow btn-hack">פתח חשבון</a>
                 </div>
             </div>
         </div>
@@ -289,62 +221,19 @@ HTML_TEMPLATE = """
 """
 
 courses_data = [
-    {
-        "id": 1, 
-        "title": "Networking Basics", 
-        "duration": "25 שעות", 
-        "color": "#38bdf8", 
-        "icon": "fa-wifi",
-        "desc": "הצעד הראשון. לומדים את מושגי היסוד: כתובות IP, איך מידע זז ברשת, ומה ההבדל בין רשת ביתית לאינטרנט העולמי.",
-        "syllabus": ["כתובות IP ו-MAC", "רכיבי רשת: נתב ומתג", "סוגי רשתות: LAN/WAN"]
-    },
-    {
-        "id": 2, 
-        "title": "Packet Tracer", 
-        "duration": "10 שעות", 
-        "color": "#818cf8", 
-        "icon": "fa-laptop-code",
-        "desc": "קורס קריטי. כאן לומדים להשתמש בסימולטור של סיסקו. במקום לקנות ציוד יקר, בונים מעבדות וירטואליות.",
-        "syllabus": ["התקנת התוכנה", "בניית רשת ראשונה", "שליחת חבילות מידע (Ping)"]
-    },
-    {
-        "id": 3, 
-        "title": "Networking Essentials", 
-        "duration": "70 שעות", 
-        "color": "#c084fc", 
-        "icon": "fa-network-wired",
-        "desc": "קורס הליבה. צוללים למודל ה-OSI ומבינים לעומק את הפרוטוקולים שמניעים את האינטרנט. זה הבסיס לכל תקיפת סייבר.",
-        "syllabus": ["מודל 7 השכבות (OSI)", "פרוטוקולי TCP/UDP", "אבטחת רשת בסיסית"]
-    },
-    {
-        "id": 4, 
-        "title": "Intro to Cybersecurity", 
-        "duration": "15 שעות", 
-        "color": "#f472b6", 
-        "icon": "fa-shield-alt",
-        "desc": "המעבר לאבטחה. מבינים מי הם התוקפים, מה המוטיבציה שלהם, ואילו סוגי נוזקות קיימים בעולם.",
-        "syllabus": ["הנדסה חברתית", "סוגי Malware", "עקרונות ההגנה (CIA)"]
-    },
-    {
-        "id": 5, 
-        "title": "Linux Unhatched", 
-        "duration": "8 שעות", 
-        "color": "#fbbf24", 
-        "icon": "fa-terminal",
-        "desc": "מערכת ההפעלה של ההאקרים. קורס קצר שמלמד להשתמש בשורת הפקודה (Terminal) בלי לפחד.",
-        "syllabus": ["ניווט בתיקיות", "ניהול קבצים", "הרשאות משתמשים"]
-    }
+    {"id": 1, "title": "Networking Basics", "duration": "25 שעות", "color": "#38bdf8", "icon": "fa-wifi", "desc": "היסודות. לומדים על כתובות IP, סוגי רשתות ואיך האינטרנט עובד פיזית.", "syllabus": ["כתובות IP ו-MAC", "רכיבי תקשורת (Router/Switch)", "LAN vs WAN"]},
+    {"id": 2, "title": "Packet Tracer", "duration": "10 שעות", "color": "#818cf8", "icon": "fa-laptop-code", "desc": "סימולטור הרשתות. לומדים לבנות רשתות וירטואליות לפני שנוגעים בציוד אמיתי.", "syllabus": ["התקנה והכרת הממשק", "בניית רשת פשוטה", "בדיקת תקשורת (Ping)"]},
+    {"id": 3, "title": "Networking Essentials", "duration": "70 שעות", "color": "#c084fc", "icon": "fa-network-wired", "desc": "קורס הליבה. צוללים למודל ה-OSI ולפרוטוקולים. זה הבסיס הקריטי ביותר להאקרים.", "syllabus": ["מודל 7 השכבות", "פרוטוקולי TCP/UDP", "אבטחת מידע בסיסית"]},
+    {"id": 4, "title": "Intro to Cybersecurity", "duration": "15 שעות", "color": "#f472b6", "icon": "fa-shield-alt", "desc": "מבוא לאבטחה. מי התוקפים? מה הם רוצים? ואיך מגנים על ארגון?", "syllabus": ["הנדסה חברתית", "סוגי נוזקות (Malware)", "עקרונות CIA"]},
+    {"id": 5, "title": "Linux Unhatched", "duration": "8 שעות", "color": "#fbbf24", "icon": "fa-terminal", "desc": "מערכת ההפעלה של הסייבר. לומדים לעבוד עם הטרמינל (שורת הפקודה).", "syllabus": ["פקודות בסיסיות", "ניהול קבצים", "הרשאות"]}
 ]
 
 @app.route('/')
-def home():
-    return render_template_string(HTML_TEMPLATE, mode='courses', courses=courses_data, cisco_url="https://www.netacad.com/catalogs/learn")
+def home(): return render_template_string(HTML_TEMPLATE, mode='courses', courses=courses_data)
 
 @app.route('/practice')
-def practice():
-    return render_template_string(HTML_TEMPLATE, mode='practice')
+def practice(): return render_template_string(HTML_TEMPLATE, mode='practice')
 
 if __name__ == '__main__':
-    # הקוד הזה חיוני ל-Render
-    port = int(os.environ.get("PORT", 10000))
+    port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
