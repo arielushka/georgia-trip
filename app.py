@@ -1,8 +1,9 @@
+import os
 from flask import Flask, render_template_string
 
 app = Flask(__name__)
 
-# --- תבנית ה-HTML וה-CSS (הכל בקובץ אחד) ---
+# --- תבנית ה-HTML וה-CSS ---
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -16,11 +17,11 @@ HTML_TEMPLATE = """
     
     <style>
         :root {
-            --bg-dark: #0f172a;       /* רקע ראשי כהה מאוד */
-            --card-bg: #1e293b;       /* רקע כרטיס בהיר יותר */
-            --text-white: #ffffff;    /* טקסט לבן נקי */
-            --text-gray: #cbd5e1;     /* טקסט משני אפור בהיר */
-            --accent: #38bdf8;        /* צבע דגש (תכלת) */
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-white: #ffffff;
+            --text-gray: #cbd5e1;
+            --accent: #38bdf8;
         }
 
         body {
@@ -62,14 +63,14 @@ HTML_TEMPLATE = """
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- Cards (General) --- */
+        /* --- Cards --- */
         .custom-card {
             background-color: var(--card-bg);
             border: 1px solid #334155;
             border-radius: 16px;
             margin-bottom: 20px;
             transition: 0.3s;
-            color: var(--text-white); /* וידוא שכל הטקסט בכרטיס לבן */
+            color: var(--text-white);
         }
         
         .custom-card:hover {
@@ -77,7 +78,6 @@ HTML_TEMPLATE = """
             box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
         }
 
-        /* --- Course Specific --- */
         .course-header {
             padding: 20px;
             display: flex;
@@ -103,14 +103,13 @@ HTML_TEMPLATE = """
             padding: 30px;
         }
 
-        /* --- Practice Specific --- */
         .practice-container {
             padding: 30px;
         }
         
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
             margin-top: 20px;
             border-radius: 10px;
@@ -125,7 +124,6 @@ HTML_TEMPLATE = """
             height: 100%;
         }
 
-        /* --- Typography Fixes --- */
         h1, h2, h3, h4, h5, h6 { color: var(--text-white) !important; }
         p, li { color: var(--text-gray); }
         .text-white-force { color: white !important; }
@@ -173,7 +171,6 @@ HTML_TEMPLATE = """
     </nav>
 
     {% if mode == 'courses' %}
-    
     <div class="hero-section">
         <div class="container">
             <h1 class="display-4 hero-title">מסלול הלימוד המלא</h1>
@@ -182,7 +179,7 @@ HTML_TEMPLATE = """
                     <p class="lead text-white-force">
                         ברוכים הבאים! הקורסים המוצגים למטה לקוחים מתוך האקדמיה של <strong>Cisco (NetAcad)</strong>.
                         <br>
-                        המסלול בנוי בצורה מדורגת – חשוב מאוד <strong>להתקדם שלב אחר שלב</strong> ולא לקפוץ, כדי לבנות יסודות חזקים.
+                        המסלול בנוי בצורה מדורגת – חשוב מאוד להתקדם שלב אחר שלב.
                     </p>
                 </div>
             </div>
@@ -230,7 +227,6 @@ HTML_TEMPLATE = """
     </div>
 
     {% elif mode == 'practice' %}
-
     <div class="hero-section">
         <div class="container">
             <h1 class="display-4 hero-title">אזור התרגול המעשי</h1>
@@ -244,7 +240,6 @@ HTML_TEMPLATE = """
 
     <div class="container pb-5">
         <div class="row g-4">
-            
             <div class="col-lg-6">
                 <div class="custom-card h-100 practice-container">
                     <div class="text-center mb-4">
@@ -252,16 +247,13 @@ HTML_TEMPLATE = """
                         <h2 class="fw-bold">picoCTF</h2>
                         <p class="text-gray">המקום הכי טוב להתחיל בו משחקי Capture The Flag.</p>
                     </div>
-                    
                     <div class="alert alert-dark border-secondary">
-                        <small class="text-white-force"><strong>מה עושים שם?</strong> פותרים חידות סייבר (Forensics, Web, Crypto) ומקבלים "דגלים".</small>
+                        <small class="text-white-force"><strong>מה עושים שם?</strong> פותרים חידות סייבר (Forensics, Web, Crypto).</small>
                     </div>
-
                     <h5 class="mt-4 mb-2 text-white-force">מדריך וידאו (John Hammond):</h5>
                     <div class="video-wrapper">
                         <iframe src="https://www.youtube.com/embed/videoseries?list=PL1H1sFpDiRzZ6Hk4R9Y5e3_wWz3_wWz3" frameborder="0" allowfullscreen></iframe>
                     </div>
-
                     <a href="https://picoctf.org/" target="_blank" class="btn-action btn-practice w-100 text-center mt-4">
                         התחל לשחק ב-picoCTF <i class="fas fa-arrow-left ms-2"></i>
                     </a>
@@ -275,25 +267,20 @@ HTML_TEMPLATE = """
                         <h2 class="fw-bold">TryHackMe</h2>
                         <p class="text-gray">לימוד מודרך עם מכונות וירטואליות אמיתיות.</p>
                     </div>
-
                     <div class="alert alert-dark border-secondary">
-                        <small class="text-white-force"><strong>מה עושים שם?</strong> מקבלים מכונה "פרוצה" וצריך למצוא בה חולשות לפי מדריך כתוב.</small>
+                        <small class="text-white-force"><strong>מה עושים שם?</strong> פורצים למכונות לפי מדריך.</small>
                     </div>
-
                     <h5 class="mt-4 mb-2 text-white-force">איך מתחילים? (NetworkChuck):</h5>
                     <div class="video-wrapper">
                         <iframe src="https://www.youtube.com/embed/fNZdXq2jXWU" frameborder="0" allowfullscreen></iframe>
                     </div>
-
                     <a href="https://tryhackme.com/" target="_blank" class="btn-action btn-practice w-100 text-center mt-4">
                         הירשם ל-TryHackMe <i class="fas fa-arrow-left ms-2"></i>
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
-
     {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -301,7 +288,6 @@ HTML_TEMPLATE = """
 </html>
 """
 
-# --- נתונים ---
 courses_data = [
     {
         "id": 1, 
@@ -359,4 +345,6 @@ def practice():
     return render_template_string(HTML_TEMPLATE, mode='practice')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # הקוד הזה חיוני ל-Render
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
